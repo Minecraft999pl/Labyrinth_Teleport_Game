@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewBehaviourScript : MonoBehaviour
+public class PortalCamera : MonoBehaviour
 {
     public Transform playerCamera;
     public Transform portal;
@@ -46,5 +46,10 @@ public class NewBehaviourScript : MonoBehaviour
             newCameraDirection = new Vector3(newCameraDirection.x * -1, newCameraDirection.y, newCameraDirection.z * -1);
             transform.rotation = Quaternion.LookRotation(newCameraDirection, Vector3.up);
         }
+    }
+
+    public void SetMyAngle(float angle)
+    {
+        myAngle = angle;
     }
 }
