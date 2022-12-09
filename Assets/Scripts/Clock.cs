@@ -6,6 +6,9 @@ public class Clock : PickUp
 {
     public bool addTime;
     public uint time = 5;
+    public float xRotation = 0f;
+    public float yRotation = 0.5f;
+    public float zRotation = 0f;
 
     // Start is called before the first frame update
     void Start()
@@ -31,6 +34,6 @@ public class Clock : PickUp
     // Update is called once per frame
     void Update()
     {
-        Rotation();
+        Rotation(xRotation, yRotation, zRotation);
     }
 }

@@ -5,6 +5,9 @@ using UnityEngine;
 public class Crystal : PickUp
 {
     public int points = 5;
+    public float xRotation = 0f;
+    public float yRotation = 0f;
+    public float zRotation = 0.5f;
 
     // Start is called before the first frame update
     void Start()
@@ -21,6 +24,6 @@ public class Crystal : PickUp
     // Update is called once per frame
     void Update()
     {
-        Rotation();
+        Rotation(xRotation, yRotation, zRotation);
     }
 }

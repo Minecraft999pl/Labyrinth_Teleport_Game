@@ -21,8 +21,8 @@ public class PickUp : MonoBehaviour
         Debug.Log("Podniesione");
         Destroy(this.gameObject);
     }
-    public void Rotation()
+    public void Rotation(float x, float y, float z)
     {
-        transform.Rotate(new Vector3(0,0.5f,0));
+        transform.Rotate(new Vector3(x,y,z));
     }
 }
