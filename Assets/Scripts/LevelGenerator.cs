@@ -48,6 +48,7 @@ public class LevelGenerator : MonoBehaviour
             for(int z = 0; z < map.height; z++)
             {
                 GenerateTile(x, z);
+                ColorTheChildren();
             }
         }
     }
