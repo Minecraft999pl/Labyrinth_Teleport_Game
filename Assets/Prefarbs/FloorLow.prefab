@@ -202,7 +202,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1809075413114673162}
   m_Layer: 6
-  m_Name: FloorLowSpeed
+  m_Name: FloorLow
   m_TagString: LevelElement
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

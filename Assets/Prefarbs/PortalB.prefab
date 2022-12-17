@@ -123,7 +123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myCamera: {fileID: 0}
-  player: {fileID: 0}
+  player: {fileID: 6748656132717694822, guid: 69ed68aa0c9374343b5dc969f5698abd, type: 3}
   myRenderPlane: {fileID: 167965055316213308}
   myCollidPlane: {fileID: 7664990698832379268}
   otherPortal: {fileID: 0}
