@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -15,7 +16,7 @@ public class GameManager : MonoBehaviour
     public int greenKey = 0;
     public int goldKey = 0;
 
-    AudioSource audioSource;
+   /* AudioSource audioSource;
     public AudioClip resumeClip;
     public AudioClip pauseClip;
     public AudioClip loseClip;
@@ -23,7 +24,20 @@ public class GameManager : MonoBehaviour
     public AudioClip pickClip;
 
     public MusicScript musicScript;
-    bool lessTime = false;
+    bool lessTime = false;*/
+
+    public Text timeText;
+    public Text redKeyText;
+    public Text greenKeyText;
+    public Text goldKeyText;
+    public Text crystalText;
+    public Image snowFlake;
+
+    public GameObject infoPanel;
+    public Text pauseEnd;
+    public Text reloadInfo;
+    public Text useInfo;
+    public GameObject ErrorPanel;
 
     // Start is called before the first frame update
     void Start()
@@ -33,15 +47,19 @@ public class GameManager : MonoBehaviour
             gameManager = this;
         }
 
-        InvokeRepeating("Stopper", 2, 1);
-
         if (timeToEnd <= 0)
         {
             timeToEnd = 100;
         }
 
-        audioSource = GetComponent<AudioSource>();
-        InvokeRepeating("Stoppper", 2, 1);
+        //audioSource = GetComponent<AudioSource>();
+        InvokeRepeating("Stopper", 2, 1);
+        snowFlake.enabled = false;
+        timeText.text = timeToEnd.ToString();
+        infoPanel.SetActive(true);
+        pauseEnd.text = "Pause";
+        reloadInfo.text = "";
+        SetUseInfo("");
     }
 
     // Update is called once per frame
@@ -51,16 +69,18 @@ public class GameManager : MonoBehaviour
         PickUpCheck();
     }
 
-    public void PlayClip(AudioClip playClip)
+    /*public void PlayClip(AudioClip playClip)
     {
         audioSource.clip = playClip;
         audioSource.Play();
-    }
+    }*/
 
     void Stopper()
     {
         timeToEnd --;
         Debug.Log("Time: " + timeToEnd + "s");
+        timeText.text = timeToEnd.ToString();
+        snowFlake.enabled = false;
 
         if (timeToEnd <= 0)
         {
@@ -69,7 +89,7 @@ public class GameManager : MonoBehaviour
         }
         if (endGame){
             EndGame();
-        }
+        }/*
         if(timeToEnd < 20 && !lessTime)
         {
             LessTimeOn();
@@ -79,13 +99,14 @@ public class GameManager : MonoBehaviour
         {
             LessTimeOff();
             lessTime = false;
-        }
+        }*/
     }
 
     public void PauseGame()
     {
-        PlayClip(pauseClip);
-        musicScript.OnPauseGame();
+        //PlayClip(pauseClip);
+        //musicScript.OnPauseGame();
+        infoPanel.SetActive(true);
         Debug.Log("Pause Game");
         Time.timeScale = 0f;
         gamePaused = true;
@@ -93,8 +114,9 @@ public class GameManager : MonoBehaviour
 
     void ResumeGame()
     {
-        PlayClip(resumeClip);
-        musicScript.OnResumeGame();
+        // PlayClip(resumeClip);
+        //musicScript.OnResumeGame();
+        infoPanel.SetActive(false);
         Debug.Log("Resume Game");
         Time.timeScale = 1f;
         gamePaused = false;
@@ -113,51 +135,68 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-    public void EndGame(){
+    public void EndGame()
+    {
         CancelInvoke("Stopper");
+        infoPanel.SetActive(true);
         if (win)
         {
-            PlayClip(winClip);
+            //PlayClip(winClip);
             Debug.Log("You win! Reload?");
+            pauseEnd.text = "You win!";
+            reloadInfo.text = "Reload?";
             //Time.timeScale = 0f;
         }
         else
         {
-            PlayClip(loseClip);
+            //PlayClip(loseClip);
             Debug.Log("You lose! Reload?");
+            pauseEnd.text = "You lose!";
+            reloadInfo.text = "Reload?";
             //Time.timeScale = 0f;
         }
+    }
+
+    public void SetUseInfo(string info)
+    {
+        useInfo.text = info;
     }
 
     public void AddPoints(int point)
     {
         points += point;
+        crystalText.text = points.ToString();
     }
 
     public void AddTime(int AddTime)
     {
         timeToEnd += AddTime;
+        timeText.text = timeToEnd.ToString();
     }
 
     public void FreezeTime(int freeze)
     {
         CancelInvoke("Stopper");
         InvokeRepeating("Stopper", freeze, 1);
+        snowFlake.enabled = true;
     }
 
     public void AddKey(KeyColor color)
     {
-        if (color == KeyColor.Gold)
+        if (color == KeyColor.Red)
         {
-            goldKey++;
+            redKey++;
+            redKeyText.text = redKey.ToString();
         }
         else if (color == KeyColor.Green)
         {
             greenKey++;
+            greenKeyText.text = greenKey.ToString();
         }
-        else if (color == KeyColor.Red)
+        else if (color == KeyColor.Gold)
         {
-            redKey++;
+            goldKey++;
+            goldKeyText.text = goldKey.ToString();
         }
     }
 
@@ -170,7 +209,7 @@ public class GameManager : MonoBehaviour
             Debug.Log("Points: " + points);
         }
     }
-
+    /*
     public void LessTimeOn()
     {
         musicScript.PitchThis(1.58f);
@@ -179,5 +218,5 @@ public class GameManager : MonoBehaviour
     public void LessTimeOff()
     {
         musicScript.PitchThis(1f);
-    }
+    }*/
 }

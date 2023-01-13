@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MusicScript : MonoBehaviour
-{
+{/*
     AudioSource source;
     double pauseClipTime = 0;
     public AudioClip[] clips;
@@ -49,5 +49,5 @@ public class MusicScript : MonoBehaviour
     public void PitchThis(float pitch)
     {
         source.pitch = pitch;
-    }
+    }*/
 }

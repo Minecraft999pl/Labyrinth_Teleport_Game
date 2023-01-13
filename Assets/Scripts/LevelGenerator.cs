@@ -5,22 +5,10 @@ using UnityEngine;
 public class LevelGenerator : MonoBehaviour
 {
     public Texture2D map;
-    public ColorToPrefarb[] collorMappings;
+    public ColorToPrefarb[] colorMappings;
     public float offset = 5f;
     public Material material01;
     public Material material02;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     void GenerateTile(int x, int z)
     {
@@ -31,24 +19,114 @@ public class LevelGenerator : MonoBehaviour
             return;
         }
 
-        foreach(ColorToPrefarb collorMapping in collorMappings)
+        foreach(ColorToPrefarb colorMapping in colorMappings)
         {
-            if(collorMapping.color.Equals(pixelColor))
+            if(colorMapping.color.Equals(pixelColor))
             {
-                Vector3 position = new Vector3(x, 0 ,z) * offset;
-                Instantiate(collorMapping.prefarb, position, Quaternion.identity, transform);
+                if(!colorMapping.isSpecial)
+                {
+                    Vector3 position = new Vector3(x, 0 ,z) * offset;
+                    Instantiate(colorMapping.prefarb, position, Quaternion.identity, transform);
+                    colorMapping.pixelsLeft--;
+                    return;
+                }
+                else
+                {
+                    int timesSkipped = 0;
+                    foreach(var tileNum in colorMapping.tileNums)
+                    {
+                        if(tileNum.Equals(colorMapping.pixelsLeft))
+                        {
+                            Vector3 position = new Vector3(x, 0 ,z) * offset;
+                            Instantiate(colorMapping.specialTile, position, Quaternion.identity, transform);
+                            colorMapping.pixelsLeft--;
+                        }
+                        else if(!tileNum.Equals(colorMapping.pixelsLeft) && timesSkipped == colorMapping.tileNums.Count - 1)
+                        {
+                            Vector3 position = new Vector3(x, 0 ,z) * offset;
+                            Instantiate(colorMapping.prefarb, position, Quaternion.identity, transform);
+                            colorMapping.pixelsLeft--;
+                        }
+                        else
+                        {
+                            timesSkipped++;
+                        }
+                    }  
+                }    
             }
         }
     }
 
     public void GenerateLabyrinth()
     {
+        foreach(ColorToPrefarb colorMapping in colorMappings)
+        {
+            colorMapping.pixelNum = 0;
+            colorMapping.pixelsLeft = 0;
+            colorMapping.specialNum = colorMapping.specialMax;
+            colorMapping.tileNums.Clear();
+        }
+        
+        for(int x = 0; x < map.width; x++)
+        {
+            for(int z = 0; z < map.height; z++)
+            {
+                CountPixels(x, z);
+            }
+        }
+
+        foreach(ColorToPrefarb colorMapping in colorMappings)
+        {
+            if(colorMapping.specialMax > colorMapping.pixelNum)
+            {
+                GameManager.gameManager.ErrorPanel.SetActive(true);
+            }
+            else
+            {   
+                GameManager.gameManager.ErrorPanel.SetActive(false);
+                while(colorMapping.specialMax > colorMapping.tileNums.Count)
+                {
+                    GetTileNums();
+                }
+            }
+        }
+
         for(int x = 0; x < map.width; x++)
         {
             for(int z = 0; z < map.height; z++)
             {
                 GenerateTile(x, z);
                 ColorTheChildren();
+            }
+        }
+    }
+
+    void CountPixels(int x, int z)
+    {
+         Color pixelColor = map.GetPixel(x,z);
+
+        foreach(ColorToPrefarb colorMapping in colorMappings)
+        {
+            if(colorMapping.color.Equals(pixelColor))
+            {
+                colorMapping.pixelNum++;
+                colorMapping.pixelsLeft++;
+            }
+        }
+    }
+
+    void GetTileNums()
+    {
+        foreach(ColorToPrefarb colorMapping in colorMappings)
+        {
+            if(colorMapping.specialNum >= 1)
+            {
+                int num = Random.Range(1, colorMapping.pixelNum + 1);
+                if(!colorMapping.tileNums.Contains(num))
+                {
+                    colorMapping.tileNums.Add(num);
+                    colorMapping.specialNum--;
+                }
             }
         }
     }
